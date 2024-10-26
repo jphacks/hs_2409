@@ -77,11 +77,10 @@ body {
 #localVideo {
   width: 50vw;
   aspect-ratio: 16/9;
-  max-width: 480px;
-  min-width: 360px;
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
+  max-width: 300px;
+  min-width: 200px;
+  align-items: flex-end;
+  justify-content: flex-end;
   margin: 0;
 }
 
@@ -89,9 +88,17 @@ body {
   display: grid;
   flex-wrap: wrap;
   gap: 16px;
-  /* justify-content: center; */
   align-items: center;
   position: relative;
+}
+
+#editor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 700px;
 }
 
 .remote-video-container {

@@ -1,61 +1,70 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import {
-    LocalUser,
-    RemoteUser,
-    useJoin,
-    useLocalCameraTrack,
-    useLocalMicrophoneTrack,
-    usePublish,
-    useRemoteAudioTracks,
-    useRemoteUsers,
-  } from "agora-rtc-react";
-
+  LocalUser,
+  RemoteUser,
+  useJoin,
+  useLocalCameraTrack,
+  useLocalMicrophoneTrack,
+  usePublish,
+  useRemoteAudioTracks,
+  useRemoteUsers,
+} from "agora-rtc-react";
+import { Editor } from "@monaco-editor/react";
 
 export const LiveVideo = () => {
+  const appId = 'fd57f12beae042569095bfc0ecc9f6b4';
+  const { channelName } = useParams();
 
-  const appId = 'fd57f12beae042569095bfc0ecc9f6b4'
-  // const agoraEngine = useRTCClient( AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })); // Initialize Agora Client
-  const { channelName } = useParams() //pull the channel name from the param
-
-  // set the connection state
   const [activeConnection, setActiveConnection] = useState(true);
 
-  // track the mic/video state - Turn on Mic and Camera On
   const [micOn, setMic] = useState(true);
   const [cameraOn, setCamera] = useState(true);
 
-  // get local video and mic tracks
   const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn);
   const { localCameraTrack } = useLocalCameraTrack(cameraOn);
 
-  // to leave the call
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  // Join the channel
   useJoin(
     {
       appid: appId,
       channel: channelName!,
       token: null,
     },
-    activeConnection,
+    activeConnection
   );
 
   usePublish([localMicrophoneTrack, localCameraTrack]);
 
-  //remote users
   const remoteUsers = useRemoteUsers();
   const { audioTracks } = useRemoteAudioTracks(remoteUsers);
 
-  // play the remote user audio tracks
   audioTracks.forEach((track) => track.play());
 
+  // エディターのコード状態を管理
+  const [code, setCode] = useState("// ここにコードを入力");
 
   return (
-    <>
-      <div id='videoFrame'>
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* 左側：Monaco Editor */}
+      <div id="editor">
+        <Editor
+          language="c"
+          value={code}
+          onChange={(newValue) => setCode(newValue || "")}
+          theme="vs-dark"
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+          }}
+          width="100%"
+          height="100%"
+        />
+      </div>
+
+      {/* 右側：ビデオコンポーネント */}
+            <div id='videoFrame'>
         <div id='remoteVideoGrid'>
           <div className="remote-video-container">
             <LocalUser
@@ -98,6 +107,6 @@ export const LiveVideo = () => {
           }
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
