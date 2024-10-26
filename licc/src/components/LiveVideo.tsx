@@ -1,100 +1,108 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import {
-    LocalUser,
-    RemoteUser,
-    useJoin,
-    useLocalCameraTrack,
-    useLocalMicrophoneTrack,
-    usePublish,
-    useRemoteAudioTracks,
-    useRemoteUsers,
-  } from "agora-rtc-react";
-
+  LocalUser,
+  RemoteUser,
+  useJoin,
+  useLocalCameraTrack,
+  useLocalMicrophoneTrack,
+  usePublish,
+  useRemoteAudioTracks,
+  useRemoteUsers,
+} from "agora-rtc-react";
+import { Editor } from "@monaco-editor/react";
 
 export const LiveVideo = () => {
+  const appId = 'fd57f12beae042569095bfc0ecc9f6b4';
+  const { channelName } = useParams();
 
-  const appId = 'fd57f12beae042569095bfc0ecc9f6b4'
-  // const agoraEngine = useRTCClient( AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })); // Initialize Agora Client
-  const { channelName } = useParams() //pull the channel name from the param
-
-  // set the connection state
   const [activeConnection, setActiveConnection] = useState(true);
 
-  // track the mic/video state - Turn on Mic and Camera On
   const [micOn, setMic] = useState(true);
   const [cameraOn, setCamera] = useState(true);
 
-  // get local video and mic tracks
   const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn);
   const { localCameraTrack } = useLocalCameraTrack(cameraOn);
 
-  // to leave the call
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  // Join the channel
   useJoin(
     {
       appid: appId,
       channel: channelName!,
       token: null,
     },
-    activeConnection,
+    activeConnection
   );
 
   usePublish([localMicrophoneTrack, localCameraTrack]);
 
-  //remote users
   const remoteUsers = useRemoteUsers();
   const { audioTracks } = useRemoteAudioTracks(remoteUsers);
 
-  // play the remote user audio tracks
   audioTracks.forEach((track) => track.play());
 
+  // エディターのコード状態を管理
+  const [code, setCode] = useState("// ここにコードを入力");
 
   return (
-    <>
-      <div id='remoteVideoGrid'>
-        { 
-          // Initialize each remote stream using RemoteUser component
-          remoteUsers.map((user) => (
-            <div key={user.uid} className="remote-video-container">
-              <RemoteUser user={user} /> 
-            </div>
-          ))
-        }
-      </div>
-      <div id='localVideo'>
-        <LocalUser
-          audioTrack={localMicrophoneTrack}
-          videoTrack={localCameraTrack}
-          cameraOn={cameraOn}
-          micOn={micOn}
-          playAudio={micOn}
-          playVideo={cameraOn}
-          className=''
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* 左側：Monaco Editor */}
+      <div id="editor">
+        <Editor
+          language="c"
+          value={code}
+          onChange={(newValue) => setCode(newValue || "")}
+          theme="vs-dark"
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+          }}
+          width="100%"
+          height="100%"
         />
-        <div>
-          {/* media-controls toolbar component - UI controling mic, camera, & connection state  */}
+      </div>
+
+      {/* 右側：ビデオコンポーネント */}
+      <div style={{ display: "flex", height: "100vh" }}>
+        <div id="remoteVideoGrid" style={{ flex: 0 }}>
+          {remoteUsers.map((user) => (
+            <div key={user.uid} className="remote-video-container">
+              <RemoteUser user={user} />
+            </div>
+          ))}
+        </div>
+        <div id="localVideo" style={{ flexShrink: 0 }}>
+          <LocalUser
+            audioTrack={localMicrophoneTrack}
+            videoTrack={localCameraTrack}
+            cameraOn={cameraOn}
+            micOn={micOn}
+            playAudio={micOn}
+            playVideo={cameraOn}
+          />
+          {/* メディアコントロール */}
           <div id="controlsToolbar">
             <div id="mediaControls">
-              <button className="btn" onClick={() => setMic(a => !a)}>
-                Mic
+              <button className="btn" onClick={() => setMic((prev) => !prev)}>
+                {micOn ? "マイクオフ" : "マイクオン"}
               </button>
-              <button className="btn" onClick={() => setCamera(a => !a)}>
-                Camera
+              <button className="btn" onClick={() => setCamera((prev) => !prev)}>
+                {cameraOn ? "カメラオフ" : "カメラオン"}
               </button>
             </div>
-            <button id="endConnection"
-                onClick={() => {
-                  setActiveConnection(false)
-                  navigate('/')
-                }}> Disconnect
+            <button
+              id="endConnection"
+              onClick={() => {
+                setActiveConnection(false);
+                navigate("/");
+              }}
+            >
+              切断
             </button>
           </div>
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
