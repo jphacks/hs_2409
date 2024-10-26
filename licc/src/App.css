@@ -40,9 +40,9 @@ body {
 }
 
 #controlsToolbar {
-  bottom: 35px;
-  right: 35px;
-  position: fixed;
+  bottom: 70px;
+  right: 10px;
+  position: relative;
   z-index: 99;
 }
 
@@ -67,6 +67,13 @@ body {
   opacity: 100%;
 }
 
+
+#videoFrame {
+  right: 32px;
+  top: 16px;
+  position: fixed;
+}
+
 #localVideo {
   width: 50vw;
   aspect-ratio: 16/9;
@@ -79,11 +86,12 @@ body {
 }
 
 #remoteVideoGrid {
-  display: flex;
+  display: grid;
   flex-wrap: wrap;
   gap: 16px;
   /* justify-content: center; */
   align-items: center;
+  position: relative;
 }
 
 .remote-video-container {

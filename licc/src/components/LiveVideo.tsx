@@ -55,44 +55,47 @@ export const LiveVideo = () => {
 
   return (
     <>
-      <div id='remoteVideoGrid'>
-        { 
-          // Initialize each remote stream using RemoteUser component
-          remoteUsers.map((user) => (
-            <div key={user.uid} className="remote-video-container">
-              <RemoteUser user={user} /> 
+      <div id='videoFrame'>
+        <div id='remoteVideoGrid'>
+          <div className="remote-video-container">
+            <LocalUser
+              audioTrack={localMicrophoneTrack}
+              videoTrack={localCameraTrack}
+              cameraOn={cameraOn}
+              micOn={micOn}
+              playAudio={micOn}
+              playVideo={cameraOn}
+              className=''
+            />
+            {/* media-controls toolbar component - UI controling mic, camera, & connection state  */}
+            <div id="controlsToolbar">
+              <div id="mediaControls">
+                <button className="btn" onClick={() => setMic(a => !a)}>
+                  Mic
+                </button>
+                <button className="btn" onClick={() => setCamera(a => !a)}>
+                  Camera
+                </button>
+                <button id="endConnection"
+                  onClick={() => {
+                    setActiveConnection(false)
+                    navigate('/')
+                  }}> Disconnect
+                </button>
+              </div>
             </div>
-          ))
-        }
-      </div>
-      <div id='localVideo'>
-        <LocalUser
-          audioTrack={localMicrophoneTrack}
-          videoTrack={localCameraTrack}
-          cameraOn={cameraOn}
-          micOn={micOn}
-          playAudio={micOn}
-          playVideo={cameraOn}
-          className=''
-        />
-        <div>
-          {/* media-controls toolbar component - UI controling mic, camera, & connection state  */}
-          <div id="controlsToolbar">
-            <div id="mediaControls">
-              <button className="btn" onClick={() => setMic(a => !a)}>
-                Mic
-              </button>
-              <button className="btn" onClick={() => setCamera(a => !a)}>
-                Camera
-              </button>
-            </div>
-            <button id="endConnection"
-                onClick={() => {
-                  setActiveConnection(false)
-                  navigate('/')
-                }}> Disconnect
-            </button>
           </div>
+          <div>
+
+          </div>
+          { 
+            // Initialize each remote stream using RemoteUser component
+            remoteUsers.map((user) => (
+              <div key={user.uid} className="remote-video-container">
+                <RemoteUser user={user} /> 
+              </div>
+            ))
+          }
         </div>
       </div>
     </>
