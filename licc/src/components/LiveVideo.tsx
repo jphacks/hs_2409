@@ -45,7 +45,7 @@ export const LiveVideo = () => {
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       {/* 左側：Monaco Editor */}
-      <SharedEditor />
+      <SharedEditor channelName={channelName!} />
 
       {/* 右側：ビデオコンポーネント */}
       <div style={{ display: "flex", height: "100vh" }}>
