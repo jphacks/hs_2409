@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../FirebaseConfig";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { Editor } from "@monaco-editor/react";
 
-const SharedEditor = ({channelName}) => {
+const SharedEditor = (prop: {channelName: string}) => {
   const [code, setCode] = useState("");
-  const docRef = doc(db, "codes", channelName); // codesコレクションにチャンネル名のドキュメントを作成
+  const docRef = doc(db, "codes", prop.channelName); // codesコレクションにチャンネル名のドキュメントを作成
   
   useEffect(() => {
     // Firestoreのドキュメントをリアルタイムで監視
@@ -27,7 +27,6 @@ const SharedEditor = ({channelName}) => {
 
   return (
     <div id="editor">
-      {channelName}
       <Editor
         language="c"
         value={code}
