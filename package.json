@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/jphacks/hs_2409/issues"
   },
-  "homepage": "https://github.com/jphacks/hs_2409#readme"
+  "homepage": "https://github.com/jphacks/hs_2409#readme",
+  "dependencies": {
+    "agora-rtc-react": "^2.3.0",
+    "react-router-dom": "^6.27.0"
+  }
 }
