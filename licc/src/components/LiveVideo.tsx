@@ -10,7 +10,7 @@ import {
   useRemoteAudioTracks,
   useRemoteUsers,
 } from "agora-rtc-react";
-import { Editor } from "@monaco-editor/react";
+import SharedEditor from "./SharedEditor";
 
 export const LiveVideo = () => {
   const appId = 'fd57f12beae042569095bfc0ecc9f6b4';
@@ -42,26 +42,10 @@ export const LiveVideo = () => {
 
   audioTracks.forEach((track) => track.play());
 
-  // エディターのコード状態を管理
-  const [code, setCode] = useState("// ここにコードを入力");
-
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       {/* 左側：Monaco Editor */}
-      <div id="editor">
-        <Editor
-          language="c"
-          value={code}
-          onChange={(newValue) => setCode(newValue || "")}
-          theme="vs-dark"
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-          }}
-          width="100%"
-          height="100%"
-        />
-      </div>
+      <SharedEditor />
 
       {/* 右側：ビデオコンポーネント */}
       <div style={{ display: "flex", height: "100vh" }}>
