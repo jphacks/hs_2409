@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   LocalUser,
@@ -11,6 +11,10 @@ import {
   useRemoteUsers,
 } from "agora-rtc-react";
 import { Editor } from "@monaco-editor/react";
+
+import * as Y from "yjs";
+import { MonacoBinding } from "y-monaco";
+import { WebsocketProvider } from "y-websocket";
 
 export const LiveVideo = () => {
   const appId = 'fd57f12beae042569095bfc0ecc9f6b4';
@@ -42,29 +46,57 @@ export const LiveVideo = () => {
 
   audioTracks.forEach((track) => track.play());
 
-  // エディターのコード状態を管理
-  const [code, setCode] = useState("// ここにコードを入力");
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    const ydoc = new Y.Doc();
+
+    const provider = new WebsocketProvider(
+      'wss://demos.yjs.dev',
+      channelName,
+      ydoc
+    );
+
+    const yText = ydoc.getText('monaco');
+
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      const monacoBinding = new MonacoBinding(
+        yText,
+        editor.getModel(),
+        new Set([editor]),
+        provider.awareness
+      );
+
+      // クリーンアップ
+      return () => {
+        provider.disconnect();
+        ydoc.destroy();
+      };
+    }
+  }, [channelName]);
+
+  const handleEditorDidMount = (editor) => {
+    editorRef.current = editor;
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       {/* 左側：Monaco Editor */}
-      <div id="editor">
+      <div id="editor" style={{ width: "50%" }}>
         <Editor
-          language="c"
-          value={code}
-          onChange={(newValue) => setCode(newValue || "")}
+          language="javascript"
           theme="vs-dark"
           options={{
             minimap: { enabled: false },
             fontSize: 14,
           }}
-          width="100%"
-          height="100%"
+          onMount={handleEditorDidMount}
         />
       </div>
 
       {/* 右側：ビデオコンポーネント */}
-            <div id='videoFrame'>
+      <div id='videoFrame' style={{ width: "50%" }}>
         <div id='remoteVideoGrid'>
           <div className="remote-video-container">
             <LocalUser
@@ -76,7 +108,7 @@ export const LiveVideo = () => {
               playVideo={cameraOn}
               className=''
             />
-            {/* media-controls toolbar component - UI controling mic, camera, & connection state  */}
+            {/* メディアコントロール */}
             <div id="controlsToolbar">
               <div id="mediaControls">
                 <button className="btn" onClick={() => setMic(a => !a)}>
@@ -94,14 +126,10 @@ export const LiveVideo = () => {
               </div>
             </div>
           </div>
-          <div>
-
-          </div>
-          { 
-            // Initialize each remote stream using RemoteUser component
+          {
             remoteUsers.map((user) => (
               <div key={user.uid} className="remote-video-container">
-                <RemoteUser user={user} /> 
+                <RemoteUser user={user} />
               </div>
             ))
           }
