@@ -62,7 +62,7 @@ const EditorComponent = () => {
       />
       <div id='fileControls'>
         <button className='btn'
-            onClick={() => saveAs(new Blob([code] ,{type: "text/plain;charset=utf-8"}))}>
+            onClick={() => saveAs(new Blob([ydocRef.current.getText('monaco')] ,{type: "text/plain;charset=utf-8"}))}>
               ファイルを保存
         </button>
       </div>
