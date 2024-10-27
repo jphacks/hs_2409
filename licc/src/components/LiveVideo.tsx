@@ -51,13 +51,18 @@ export const LiveVideo = () => {
   useEffect(() => {
     const ydoc = new Y.Doc();
 
+    // WebSocket プロバイダーを設定
     const provider = new WebsocketProvider(
-      'wss://demos.yjs.dev',
+      'ws://localhost:1234',
       channelName,
       ydoc
     );
 
     const yText = ydoc.getText('monaco');
+
+    provider.on('status', (event) => {
+      console.log(event.status);
+    });
 
     if (editorRef.current) {
       const editor = editorRef.current;
@@ -67,13 +72,12 @@ export const LiveVideo = () => {
         new Set([editor]),
         provider.awareness
       );
-
-      // クリーンアップ
-      return () => {
-        provider.disconnect();
-        ydoc.destroy();
-      };
     }
+
+    return () => {
+      provider.disconnect();
+      ydoc.destroy();
+    };
   }, [channelName]);
 
   const handleEditorDidMount = (editor) => {
@@ -112,10 +116,10 @@ export const LiveVideo = () => {
             <div id="controlsToolbar">
               <div id="mediaControls">
                 <button className="btn" onClick={() => setMic(a => !a)}>
-                  Mic
+                  {micOn ? "Mic Off" : "Mic On"}
                 </button>
                 <button className="btn" onClick={() => setCamera(a => !a)}>
-                  Camera
+                  {cameraOn ? "Camera Off" : "Camera On"}
                 </button>
                 <button id="endConnection"
                   onClick={() => {
