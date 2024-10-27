@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #313131;
 }
 
 #root {
@@ -13,53 +14,50 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
-  padding: 2rem;
+  padding: 1.5rem;
   box-sizing: border-box;
-  gap: 20px; /* エディタとビデオの間に隙間を追加 */
+  gap: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
-/* エディタのスタイル */
 #editor {
-  flex: 7; /* エディタの比率 */
+  flex: 8;
   overflow: auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 16px;
-  align-items: flex-start;
-  justify-content: flex-start;
   min-width: 700px;
+  margin-right: 40px;
 }
 
-/* ビデオコンテナのスタイル */
 #videoContainer {
-  flex: 3; /* ビデオの比率を更に減少 */
+  flex: 3;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 400px; /* 最大幅を更に小さく設定 */
+  max-width: 400px;
+  margin-left: auto;
 }
 
-/* videoFrameのスタイル調整 */
 #videoFrame {
   width: 100%;
-  height: auto; /* 高さを自動調整 */
-  max-width: 400px; /* 最大幅を設定 */
+  height: auto;
+  max-width: 400px;
   aspect-ratio: 16 / 9;
-  position: relative; /* position: fixed を解除 */
+  position: relative;
 }
 
-/* ローカルビデオのスタイル調整 */
 #localVideo {
-  width: 30vw; /* 幅を40vwから30vwに減少 */
+  width: 30vw;
   aspect-ratio: 16/9;
-  max-width: 60px; /* 最大幅を80pxから60pxに減少 */
-  min-width: 60px; /* 最小幅も同様に調整 */
+  max-width: 60px;
+  min-width: 60px;
   align-items: flex-end;
   justify-content: flex-end;
   margin: 0;
 }
 
-/* 既存のスタイルを保持 */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -146,16 +144,18 @@ body {
   overflow: hidden;
 }
 
-/* レスポンシブ対応 */
 @media (max-width: 768px) {
   #mainContainer {
     flex-direction: column;
+    gap: 10px;
+    padding: 1rem;
   }
   
   #editor, #videoContainer {
     flex: none;
     width: 100%;
     max-width: none;
+    margin-left: 0;
   }
   
   #videoFrame {
