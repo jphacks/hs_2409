@@ -55,6 +55,14 @@ body {
   border-color: #099DFD;
 }
 
+#fileControls button {
+  margin: 0 5px 7.5px;
+  padding: 10px;
+}
+
+#fileControls button:hover {
+  border-color: #099DFD;
+}
 
 #endConnection {
   border-color: red;

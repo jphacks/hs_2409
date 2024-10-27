@@ -1,5 +1,6 @@
 // EditorComponent.jsx
 import React, { useState } from 'react';
+import { saveAs } from 'file-saver';
 import { Editor } from '@monaco-editor/react';
 
 const EditorComponent = () => {
@@ -19,6 +20,12 @@ const EditorComponent = () => {
         width="100%"
         height="100%"
       />
+      <div id='fileControls'>
+        <button className='btn'
+            onClick={() => saveAs(new Blob([code] ,{type: "text/plain;charset=utf-8"}))}>
+              ファイルを保存
+        </button>
+      </div>
     </div>
   );
 };
