@@ -12,23 +12,18 @@ const EditorComponent = () => {
   const bindingRef = useRef(null);
 
   useEffect(() => {
-    // Yjs ドキュメントを初期化
     ydocRef.current = new Y.Doc();
 
-    // Yjs WebSocket サーバーに接続
     providerRef.current = new WebsocketProvider('ws://localhost:1234', 'monaco-demo', ydocRef.current);
 
-    // Yjs のテキスト型を取得
     const yText = ydocRef.current.getText('monaco');
 
-    // アウェアネス（ユーザー情報）を設定
     const awareness = providerRef.current.awareness;
     awareness.setLocalStateField('user', {
       name: 'ユーザー' + Math.floor(Math.random() * 100),
       color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     });
 
-    // クリーンアップ関数
     return () => {
       if (bindingRef.current) bindingRef.current.destroy();
       if (providerRef.current) providerRef.current.disconnect();
@@ -39,12 +34,10 @@ const EditorComponent = () => {
   const handleEditorMount = (editor) => {
     editorRef.current = editor;
 
-    // Yjs ドキュメントとモナコエディタのモデルを取得
     const yText = ydocRef.current.getText('monaco');
     const model = editor.getModel();
 
     if (model) {
-      // MonacoBinding を設定
       bindingRef.current = new MonacoBinding(
         yText,
         model,
