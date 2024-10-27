@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as Y from 'yjs';
 import { MonacoBinding } from 'y-monaco';
 import { WebsocketProvider } from 'y-websocket';
+import { saveAs } from 'file-saver';
 import { Editor } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 
@@ -66,6 +67,12 @@ const EditorComponent = () => {
         }}
         onMount={handleEditorMount}
       />
+      <div id='fileControls'>
+        <button className='btn'
+            onClick={() => saveAs(new Blob([code] ,{type: "text/plain;charset=utf-8"}))}>
+              ファイルを保存
+        </button>
+      </div>
     </div>
   );
 };
