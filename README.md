@@ -1,6 +1,6 @@
 # LiCC(Live Coding Collaboration)
 
-[![IMAGE ALT TEXT HERE](banner.jpg)](https://www.youtube.com/watch?v=DZXUkEj-CSI)
+[![IMAGE ALT TEXT HERE](banner.jpg)](https://youtu.be/pRpLsNX5XbE)
 
 ## 製品概要
 ### 背景(製品開発のきっかけ、課題等）
